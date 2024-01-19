@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/src/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Client from 'twitter-api-sdk';
 type Response = {};
@@ -16,13 +16,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   try {
     const { wallet } = req.body;
 
-    const getUser = await prismaDB.user.findUnique({
+    const getUser = await prisma.user.findUnique({
       where: {
         wallet: wallet as string,
       },
@@ -34,7 +33,7 @@ export default async function handler(
 
     if (getUser) {
       const useTwitterData = getUser.userTwitterData;
-      const getQuestTask = await prismaDB.questTask.findUnique({
+      const getQuestTask = await prisma.questTask.findUnique({
         where: {
           taskName: 'twitter_share',
         },
@@ -64,7 +63,7 @@ export default async function handler(
       });
 
       if (postTweet.data) {
-        const updateTwitterData = await prismaDB.userTwitterData.update({
+        const updateTwitterData = await prisma.userTwitterData.update({
           where: {
             userId: getUser.id,
           },

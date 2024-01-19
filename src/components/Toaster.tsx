@@ -1,5 +1,5 @@
 import { Box, Text } from 'grommet';
-import { Close, Checkmark } from 'grommet-icons';
+import { Close, Checkmark, Alert } from 'grommet-icons';
 import styled from 'styled-components';
 
 interface IToasterProps {
@@ -24,6 +24,10 @@ const toasterTypes: IToasterTypes = {
     color: 'success',
     toasterIconComponent: <Checkmark color="success" />,
   },
+  warning: {
+    color: '#4B5458',
+    toasterIconComponent: <Alert color="#4B5458" />,
+  }
 };
 
 const Toast = styled.div`

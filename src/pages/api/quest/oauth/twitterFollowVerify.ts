@@ -1,59 +1,34 @@
+import prisma from '@/src/lib/prisma';
 import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Client from 'twitter-api-sdk';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 type Response = {};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   try {
     const { wallet } = req.body;
 
-    const getUser = await prismaDB.user.findUnique({
+    const getUser = await prisma.user.findUnique({
       where: {
         wallet: wallet as string,
       },
       include: {
-        userQuestTask: true,
         userTwitterData: true,
       },
     });
     if (!getUser) {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'User not found' } });
     }
 
     const useTwitterData = getUser.userTwitterData;
-    const getQuestTask = await prismaDB.questTask.findUnique({
-      where: {
-        taskName: 'twitter_follow',
-      },
-    });
-
-    if (!getQuestTask) {
-      return res
-        .status(503)
-        .json({ data: { message: 'Internal Server Error' } });
-    }
-
-    const userHasTask = getUser.userQuestTask.filter(
-      (usertask) => usertask.taskId == getQuestTask.id
-    );
-    if (userHasTask.length) {
-      return res.status(200).json({ data: 'OK' });
-    }
 
     const twitterClient = new Client(useTwitterData?.twitterAccessToken!);
-
-    const myUser = await twitterClient.users.findMyUser();
-    // const followers = await twitterClient.users.usersIdFollowers(
-    //   useTwitterData?.twitterIdstr as string
-    // );
-    //
-    // console.log(followers.data);
 
     const followUser = await twitterClient.users.usersIdFollow(
       //The ID of the user that is requesting to follow the target user
@@ -65,17 +40,13 @@ export default async function handler(
     );
 
     if (followUser.data?.following) {
-      const userQuestTask = await prismaDB.userQuestTask.create({
-        data: {
-          userId: getUser.id,
-          taskId: getQuestTask.id,
-        },
-      });
+      await insertReward(getUser.id,RewardType.TwitterFollow)
       return res.status(200).json({ data: { message: 'OK' } });
     } else {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'Twitter follow not found' } });
     }
   } catch (error) {
-    console.log(error);
+    console.error('twitterFollowVerify error', error);
+    res.status(500).json({ isMember: false, error: error?.toString() });
   }
 }

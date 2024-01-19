@@ -1,0 +1,3 @@
+export const NOTIFICATION_TYPE_CONTRIBUTION_VERIFIED='notification_verified'
+export const NOTIFICATION_TYPE_MODEL_VERIFIED='model_verified'
+export const NOTIFICATION_TYPE_REWARD_UPDATED='reward_updated'

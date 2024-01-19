@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { twitterAuthClient, twitterClient } from '@/src/lib/twitterClient';
-import { Prisma, PrismaClient, UserQuestTask } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import Client from 'twitter-api-sdk';
+import prisma from '@/src/lib/prisma';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 type Response = {};
 
 async function prismaInsertUserTwitterData(
@@ -41,14 +42,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   try {
     const { wallet, accessToken } = req.body;
     const twitterClient = new Client(accessToken.accessToken);
 
-    const getUser = await prismaDB.user.findUnique({
+    const getUser = await prisma.user.findUnique({
       where: {
         wallet: wallet as string,
       },
@@ -66,7 +66,7 @@ export default async function handler(
     let getCurrentUserData;
     if (userTwitterData) {
       if (accessToken.accessToken !== '') {
-        await prismaDB.userTwitterData.update({
+        await prisma.userTwitterData.update({
           where: {
             userId: getUser.id,
           },
@@ -83,7 +83,7 @@ export default async function handler(
       if (accessToken.accessToken !== '') {
         getCurrentUserData = await twitterClient.users.findMyUser();
         const insertUserTwitterDataResult = await prismaInsertUserTwitterData(
-          prismaDB,
+          prisma,
           getUser?.id as string,
           getCurrentUserData.data?.id as string,
           getCurrentUserData.data?.name as string,
@@ -96,12 +96,14 @@ export default async function handler(
             .status(insertUserTwitterDataResult.status)
             .json({ data: { message: insertUserTwitterDataResult.message } });
         }
+
+        await insertReward(getUser.id,RewardType.TwitterConnect)
       } else {
         return res.status(404).json({ data: { message: 'Not Found' } });
       }
     }
 
-    const getQuestTask = await prismaDB.questTask.findUnique({
+    const getQuestTask = await prisma.questTask.findUnique({
       where: {
         taskName: 'twitter_connect',
       },
@@ -117,12 +119,13 @@ export default async function handler(
       (usertask) => usertask.taskId == getQuestTask.id
     );
     if (!userHasTask.length) {
-      await prismaDB.userQuestTask.create({
+      await prisma.userQuestTask.create({
         data: {
           userId: getUser.id,
           taskId: getQuestTask.id,
         },
       });
+      await insertReward(getUser.id,RewardType.TwitterConnect)
     }
     return res.status(200).json({
       data: {

@@ -17,9 +17,9 @@ const MenuItem = ({
     {...rest}
     plain
     hoverIndicator={false}
-    color={selected ? '#6c94ec' : '#424242'}
+    style={selected ? { backgroundColor: '#6C94EC', borderRadius: '20px', padding: '6px 16px 6px 16px', border: '2px solid black' } : {}}
   >
-    {selected ? <b>{text}</b> : text}
+    <p className={`text-${selected ? "white" : "black"}`}>{text}</p>
   </Button>
 );
 
@@ -44,54 +44,24 @@ export const BurgerMenu = ({
           <Close />
         </Button>
         <Box width="small">
-          <Image src="logo.png" alt="logo" />
+          <Image src="/static/images/logo.png" alt="logo" />
         </Box>
       </Box>
       <Box align="center" gap="large" margin={{ top: 'xlarge' }}>
         <Wallet />
         <MenuItem
-          href="/"
-          onClick={() => setSelected('/')}
+          href="/cocreation"
+          onClick={() => setSelected('/cocreation')}
           hoverIndicator={false}
-          selected={selected === '/'}
-          text="Home"
+          selected={selected === '/cocreation'}
+          text="Co-create"
         />
         <MenuItem
-          href="/quest"
-          onClick={() => setSelected('/quest')}
+          href="/points"
+          onClick={() => setSelected('/points')}
           hoverIndicator={false}
-          selected={selected === '/quest'}
-          text="Faucet"
-        />
-        <MenuItem
-          href="/train"
-          onClick={() => setSelected('/train')}
-          hoverIndicator={false}
-          selected={selected === '/train'}
-          text="Train"
-        />
-
-        <MenuItem
-          href="/marketplace"
-          onClick={() => setSelected('/marketplace')}
-          hoverIndicator={false}
-          selected={selected === '/marketplace'}
-          text="Marketplace"
-        />
-        <MenuItem
-          //href="/analytics"
-          //onClick={() => setSelected('/analytics')}
-          hoverIndicator={false}
-          selected={selected === '/analytics'}
-          text="Analytics"
-        />
-        <MenuItem
-          href="https://flock-io.gitbook.io/flock/"
-          target="_blank"
-          //onClick={() => setSelected('/aboutUs')}
-          hoverIndicator={false}
-          selected={selected === '/aboutUs'}
-          text="About Us"
+          selected={selected === '/points'}
+          text="Points"
         />
       </Box>
     </Box>

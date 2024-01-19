@@ -31,7 +31,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/flock-io">
-    <img src="public/logo.png" alt="Logo">
+    <img src="public/static/images/logo.png" alt="Logo">
   </a>
 
   <h3 align="center">FLock.io App</h3>

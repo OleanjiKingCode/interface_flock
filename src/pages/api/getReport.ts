@@ -1,6 +1,5 @@
+import prisma from '@/src/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-const client = new PrismaClient();
 
 type Response = {};
 
@@ -10,10 +9,10 @@ export default async function handler(
 ) {
   const { walletAddress } = req.query;
 
-  const getReport = await client.researcherReport.findFirst({
+  const getReport = await prisma.researcherReport.findFirst({
     where: {
       wallet: walletAddress as string,
-    }
+    },
   });
 
   if (!getReport) {

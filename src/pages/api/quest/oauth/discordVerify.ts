@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/src/lib/prisma';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 
 type Response = {};
 
@@ -39,13 +40,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   const { wallet } = req.body;
   try {
     // check if user already has completed the task
-    const getUser = await prismaDB.user.findUnique({
+    const getUser = await prisma.user.findUnique({
       where: {
         wallet: wallet as string,
       },
@@ -55,40 +55,25 @@ export default async function handler(
       },
     });
     if (!getUser) {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'User Not Found' } });
     }
 
-    const getQuestTask = await prismaDB.questTask.findUnique({
+    const getQuestTask = await prisma.questTask.findUnique({
       where: {
         taskName: 'discord_join_get_role',
       },
     });
     if (!getQuestTask) {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'Task Not Found' } });
     }
-
-    const userHasTask = getUser.userQuestTask.filter(
-      (usertask) => usertask.taskId == getQuestTask.id
-    );
-    if (userHasTask.length) {
-      return res.status(200).json({ data: { message: 'OK' } });
-    }
-
-    // if not completed, create a new one
+    
     const userDiscord = getUser.userDiscordData;
     const userGuildsResult = await hasUserGuildAndRole(
       userDiscord?.discordAccessToken
     );
     if (userGuildsResult) {
-      const createTask = await prismaDB.userQuestTask.create({
-        data: {
-          userId: getUser.id,
-          taskId: getQuestTask.id,
-        },
-      });
-      if (createTask) {
-        return res.status(200).json({ data: { message: 'OK' } });
-      }
+      await insertReward(getUser.id,RewardType.DiscordJoinGetRole)
+      return res.status(200).json({ data: userGuildsResult });
     }
   } catch (error) {
     console.log(error);

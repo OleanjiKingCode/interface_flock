@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient, Prisma } from '@prisma/client';
 import querystring from 'querystring';
+import prisma from '@/src/lib/prisma';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 
 type Response = {};
 
@@ -51,20 +53,21 @@ async function getDiscordUserInfo(code: string, redirectUri: string) {
   return userInfo;
 }
 
-async function createUserTask(prismaDB: PrismaClient, userId: string) {
+async function createUserTask(prisma: PrismaClient, userId: string) {
   try {
-    const task = await prismaDB.questTask.findUnique({
+    const task = await prisma.questTask.findUnique({
       where: {
         taskName: 'discord_connect',
       },
     });
     if (task) {
-      const userTask = await prismaDB.userQuestTask.create({
+      const userTask = await prisma.userQuestTask.create({
         data: {
           userId: userId,
           taskId: task.id,
         },
       });
+      await insertReward(userId,RewardType.DiscordConnect)
       console.log(userTask);
       return { error: false, status: 201, message: 'OK' };
     }
@@ -75,11 +78,8 @@ async function createUserTask(prismaDB: PrismaClient, userId: string) {
   }
 }
 
-async function prismaGetUserDiscordData(
-  prismaDB: PrismaClient,
-  userId: string
-) {
-  const userDiscordData = await prismaDB.userDiscordData.findUnique({
+async function prismaGetUserDiscordData(prisma: PrismaClient, userId: string) {
+  const userDiscordData = await prisma.userDiscordData.findUnique({
     where: {
       userId: userId,
     },
@@ -88,7 +88,7 @@ async function prismaGetUserDiscordData(
 }
 
 async function prismaInsertUserDiscordData(
-  prismaDB: PrismaClient,
+  prisma: PrismaClient,
   userId: string,
   discordId: string,
   discordUserName: string,
@@ -96,7 +96,7 @@ async function prismaInsertUserDiscordData(
   discordExpiresAt: string
 ) {
   try {
-    const userDiscordData = await prismaDB.userDiscordData.create({
+    const userDiscordData = await prisma.userDiscordData.create({
       data: {
         userId: userId,
         discordId: discordId,
@@ -126,8 +126,7 @@ export default async function handler(
 ) {
   const { wallet, code: discord_code, redirectUri } = req.body;
 
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   const discordUserInfo = await getDiscordUserInfo(
     discord_code as string,
@@ -140,7 +139,7 @@ export default async function handler(
       .json({ data: { message: discordUserInfo.message } });
   }
 
-  const getUser = await prismaDB.user.findUnique({
+  const getUser = await prisma.user.findUnique({
     where: {
       wallet: wallet as string,
     },
@@ -160,7 +159,7 @@ export default async function handler(
     const userDiscordData = getUser.userDiscordData;
     if (userDiscordData) {
       if (discordUserInfo.accessToken !== '') {
-        await prismaDB.userDiscordData.update({
+        await prisma.userDiscordData.update({
           where: {
             userId: getUser.id,
           },
@@ -173,7 +172,7 @@ export default async function handler(
           },
         });
       }
-      const getQuestTask = await prismaDB.questTask.findUnique({
+      const getQuestTask = await prisma.questTask.findUnique({
         where: {
           taskName: 'discord_connect',
         },
@@ -189,13 +188,13 @@ export default async function handler(
         (usertask) => usertask.taskId == getQuestTask.id
       );
       if (!userHasTask.length) {
-        const userTask = await createUserTask(prismaDB, getUser.id);
+        const userTask = await createUserTask(prisma, getUser.id);
       }
       return res.status(200).json({ data: userDiscordData });
     } else {
       // if the user has not yer completed the task
       let result = await prismaInsertUserDiscordData(
-        prismaDB,
+        prisma,
         getUser.id,
         discordUserInfo.id,
         discordUserInfo.username,
@@ -207,8 +206,9 @@ export default async function handler(
           .status(result.status)
           .json({ data: { message: discordUserInfo.message } });
       }
+      await insertReward(getUser.id,RewardType.DiscordConnect)
 
-      const userTask = await createUserTask(prismaDB, getUser.id);
+      const userTask = await createUserTask(prisma, getUser.id);
       console.log(userTask);
       return res.status(result.status).json({ data: result.data });
     }

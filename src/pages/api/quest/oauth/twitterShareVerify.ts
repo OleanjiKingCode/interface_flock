@@ -1,73 +1,47 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/src/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Client from 'twitter-api-sdk';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   try {
     const { wallet } = req.body;
 
-    const getUser = await prismaDB.user.findUnique({
+    const getUser = await prisma.user.findUnique({
       where: {
         wallet: wallet as string,
       },
       include: {
-        userQuestTask: true,
         userTwitterData: true,
       },
     });
     if (!getUser) {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'User not found' } });
     }
 
     const useTwitterData = getUser.userTwitterData;
-    const getQuestTask = await prismaDB.questTask.findUnique({
-      where: {
-        taskName: 'twitter_share',
-      },
-    });
-
-    if (!getQuestTask) {
-      return res
-        .status(503)
-        .json({ data: { message: 'Internal Server Error' } });
-    }
-
-    const userHasTask = getUser.userQuestTask.filter(
-      (usertask) => usertask.taskId == getQuestTask.id
-    );
-
-    if (userHasTask.length) {
-      return res.status(200).json({ data: 'OK' });
-    }
-
     const twitterClient = new Client(useTwitterData?.twitterAccessToken!);
     const usersTweets = await twitterClient.tweets.usersIdTweets(
       useTwitterData?.twitterIdstr!
     );
 
     const tweeted = usersTweets.data?.find((tweet) =>
-    tweet.text.includes('$FLC')
+      tweet.text.includes(`Be a key player in building the best chatbots in #Web3!`)
     );
 
     if (tweeted?.id) {
-      const userQuestTask = await prismaDB.userQuestTask.create({
-        data: {
-          userId: getUser.id,
-          taskId: getQuestTask.id,
-        },
-      });
+      await insertReward(getUser.id,RewardType.TwitterShare)
       return res.status(200).json({ data: { message: 'OK' } });
     } else {
-      return res.status(404).json({ data: { message: 'Not Found' } });
+      return res.status(404).json({ data: { message: 'Tweet not found' } });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ data: { message: 'Internal Server Error' } });
+    console.error(error);
+    res.status(500).json({ error: error?.toString() });
   }
 }

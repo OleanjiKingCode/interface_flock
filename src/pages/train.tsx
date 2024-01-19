@@ -7,15 +7,17 @@ import {
   Text,
   ResponsiveContext,
 } from 'grommet';
-import { CreateTask, Layout, PrimaryButton, Tasks } from '../components';
+import { CreateTask, Layout, PrimaryButton, SecondaryButton, Tasks } from '../components';
 import { useState, useContext } from 'react';
 import { AppsRounded, Money, Java, Image, Gamepad, CheckboxSelected, Search } from 'grommet-icons';
 import { useAccount } from 'wagmi';
+import { MyModels } from '../components/RAG/MyModels';
 
 const defaultCardColor = "#6C94EC";
 
 export default function TrainPage() {
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showMyModels, setShowMyModels] = useState(false);
   const [numberOfTasks, setNumberOfTasks] = useState(0);
   const size = useContext(ResponsiveContext);
   const [filterType, setFilterType] = useState<string[]>([]);

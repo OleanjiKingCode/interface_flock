@@ -24,14 +24,17 @@ const CustomForm = () => {
     <MailchimpSubscribe
       url="https://flock.us21.list-manage.com/subscribe/post?u=cf2df2da902eb8d1a5a6a553f&id=5b5347bc6d&f_id=00d6e7e1f0"
       render={({ subscribe }) => (
-        <Box direction="row" gap="medium" width="medium">
+        <Box direction="row" gap="small" width="medium" align="center">
           <TextInput
             value={email}
             placeholder="Your Email Address"
             onChange={(e) => setEmail(e.target.value)}
+            style={{ borderRadius: '30px', border: "1px solid black", fontSize: '16px', padding: '10px 20px' }}
+            width="313px"
           />
           <Button
             primary
+            pad={{ horizontal: 'medium', vertical: 'small' }}
             label="Subscribe"
             onClick={() => {
               subscribe({ EMAIL: email });
@@ -59,13 +62,13 @@ export const Footer = () => {
     >
       <Box gap="medium" width="large" align="evenly" justify="center">
         <Box width="small">
-          <Image src="logo.png" onClick={() => void push('/')} alt="logo" />
+          <Image src="/static/images/logo.png" onClick={() => void push('/')} alt="logo" />
         </Box>
         <CustomForm />
         <Box>
-          <Text color="#8E8E8E">
-            Copyright © Flock.io 2022 All right reserved
-          </Text>
+          <p className="text-[#8E8E8E] text-sm font-normal mt-3">
+            Copyright © Flock.io 2024 All right reserved
+          </p>
         </Box>
       </Box>
 

@@ -9,14 +9,39 @@ datasource db {
 }
 
 model User {
-  id              String           @id @default(cuid())
-  wallet          String           @unique
-  email           String           @default("")
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  userDiscordData UserDiscordData?
-  userQuestTask   UserQuestTask[]
-  userTwitterData UserTwitterData?
+  id                   String                 @id @default(cuid())
+  wallet               String                 @unique
+  email                String                 @default("")
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  balance              Int                    @default(0)
+  totalRewardAmount    Int                    @default(0)
+  totalSlashAmount     Int                    @default(0)
+  totalStakeAmount     Int                    @default(0)
+  DataContribution     DataContribution[]
+  Model                Model[]
+  userDiscordData      UserDiscordData?
+  userModelReward      UserModelReward[]
+  UserModelRewardAudit UserModelRewardAudit[]
+  userQuestTask        UserQuestTask[]
+  userReward           UserReward?
+  userTelegramData     UserTelegramData?
+  userTwitterData      UserTwitterData?
+}
+
+model UserTelegramData {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  telegramId        String   @unique @default("")
+  telegramFirstName String   @default("")
+  telegramLastName  String   @default("")
+  telegramUsername  String   @default("")
+  telegramHash      String   @default("")
+  telegramAuthDate  Int      @default(0)
+  verifiedMember    Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
 }
 
 model UserDiscordData {
@@ -41,8 +66,8 @@ model UserTwitterData {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   twitterAccessToken String   @default("")
-  twitterExpiresAt   String   @default("")
   twitterTweetId     String   @default("")
+  twitterExpiresAt   String   @default("")
   user               User     @relation(fields: [userId], references: [id])
 }
 
@@ -125,7 +150,149 @@ model ResearcherReport {
   id         String   @id @default(cuid())
   wallet     String   @db.VarChar(255)
   reportPath String   @db.VarChar(255)
-  report     String   @db.Text
+  report     String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
+}
+
+model DataContribution {
+  created_at            DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  filePath              String
+  stakeAmount           Int                    @default(0)
+  rewardAmount          Int                    @default(0)
+  slashAmount           Int                    @default(0)
+  upvote                Int                    @default(0)
+  downvote              Int                    @default(0)
+  userId                String?
+  dataValidationStatus  String                 @default("PENDING")
+  modelId               String
+  id                    String                 @unique @default(cuid())
+  Model                 Model                  @relation(fields: [modelId], references: [id])
+  User                  User?                  @relation(fields: [userId], references: [id])
+  UserModelRewardAudits UserModelRewardAudit[]
+}
+
+model Model {
+  created_at            DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  modelName             String                 @db.VarChar(255)
+  rewardAmount          Int                    @default(0)
+  upvote                Int                    @default(0)
+  downvote              Int                    @default(0)
+  userId                String                 @db.VarChar(255)
+  dataRequired          String
+  description           String
+  tags                  String?                @db.VarChar(255)
+  modelIcon             String?
+  exampleKnowledge      String[]               @db.VarChar
+  id                    String                 @id @default(cuid())
+  dataValidationStatus  String                 @default("PENDING")
+  version               Int                    @default(1)
+  DataContribution      DataContribution[]
+  userModelRewardAudits UserModelRewardAudit[]
+  user                  User                   @relation(fields: [userId], references: [id])
+}
+
+model DataContributionUpvote {
+  id                 String   @id @default(cuid())
+  dataContributionId String   @db.VarChar(255)
+  wallet             String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  modelId            String   @db.VarChar(255)
+}
+
+model UserReward {
+  id                String   @id @default(cuid())
+  userId            String   @unique @db.VarChar(255)
+  modelCreation     Int      @default(0)
+  contribution      Int      @default(0)
+  vote              Int      @default(0)
+  chat              Int      @default(0)
+  others            Int      @default(0)
+  totalRewardAmount Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model UserModelReward {
+  id                String   @id @default(cuid())
+  userId            String   @db.VarChar(255)
+  modelId           String   @db.VarChar(255)
+  modelCreation     Int      @default(0)
+  contribution      Int      @default(0)
+  vote              Int      @default(0)
+  chat              Int      @default(0)
+  others            Int      @default(0)
+  totalRewardAmount Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, modelId])
+}
+
+model UserModelRewardAudit {
+  id             String            @id @default(cuid())
+  userId         String            @db.VarChar(255)
+  modelId        String?           @db.VarChar(255)
+  contributionId String?           @db.VarChar(255)
+  contribution   DataContribution? @relation(fields: [contributionId], references: [id])
+  type           String            @db.VarChar(255)
+  rewardAmount   Int               @default(0)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  user           User              @relation(fields: [userId], references: [id])
+  Model          Model?            @relation(fields: [modelId], references: [id])
+}
+
+model DataContributionDownvote {
+  id                 String   @id @default(cuid())
+  dataContributionId String   @db.VarChar(255)
+  wallet             String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  modelId            String   @db.VarChar(255)
+}
+
+model ModelChat {
+  id        String   @id @default(cuid())
+  modelId   String   @db.VarChar(255)
+  question  String   @db.VarChar
+  answer    String   @db.VarChar
+  vote      Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  index     Int      @default(0)
+  sessionId String   @db.VarChar
+  userId    String   @db.VarChar(255)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model FLock_discord_btcgpt_channels {
+  id            BigInt    @id @default(autoincrement())
+  guild_id      BigInt
+  guild_name    String    @db.VarChar
+  channel_id    BigInt?
+  channel_namee String?   @db.VarChar
+  Learner_Badge String?   @db.VarChar
+  Builder_Badge String?   @db.VarChar
+  is_active     Boolean?
+  last_active   DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model FLock_discord_btcgpt_chat_logs {
+  id               BigInt    @id @default(autoincrement())
+  guild_id         BigInt?
+  channel_id       BigInt?
+  user_id          BigInt?
+  user_name        String?   @db.VarChar
+  round            Int?
+  data             Json?
+  last_interaction DateTime? @db.Timestamptz(6)
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
 }

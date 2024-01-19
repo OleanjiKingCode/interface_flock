@@ -342,6 +342,11 @@ export default function GptResearcherPage() {
                       ))}
                     </Box>
                   </Box>
+                  <Box align="center">
+                    <Box background="brand" pad="small" round="medium">
+                      <Text weight="bold" size="medium" color="white">Campaign is finished. You can't claim NFT anymore.</Text>
+                    </Box>
+                  </Box>
                   <Box
                     pad={{ vertical: 'large', horizontal: 'large' }}
                     gap="large"
@@ -434,7 +439,8 @@ export default function GptResearcherPage() {
                         <Box direction="row" align="center" justify="end">
                           <Button
                             label="Confirm"
-                            disabled={!prediction || voteLoading}
+                            // disabled={!prediction || voteLoading}
+                            disabled={true}
                             busy={
                               voteLoading ||
                               isVoteTxLoading

@@ -1,17 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { web3AuthInstance } from '@/src/hooks/web3AuthInstance';
-import { getPublicCompressed } from "@toruslabs/eccrypto";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string[]>
 ) {
-
   try {
     const { wallet } = req.body;
-    
+
     const modelLikes = await fetch(
-        `https://us-central1-flock-demo-design.cloudfunctions.net/getUserLikes?userEmail=${wallet}`,
+      `https://us-central1-flock-demo-design.cloudfunctions.net/getUserLikes?userEmail=${wallet}`,
       {
         method: 'GET',
         headers: {
@@ -19,7 +16,7 @@ export default async function handler(
         },
       }
     );
-    const data  = await modelLikes.json();
+    const data = await modelLikes.json();
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

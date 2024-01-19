@@ -6,9 +6,10 @@ interface ITimerButtonProps {
   label: string;
   onClick(): void;
   isLoading: boolean;
+  disable?: boolean;
 }
 
-export default function TimerButton({ label, onClick, isLoading }: ITimerButtonProps) {
+export default function TimerButton({ label, onClick, isLoading, disable }: ITimerButtonProps) {
   const [timer, setTimer] = useState<number>(10);
   const handleButtonClick = () => {
     setTimer(10);
@@ -37,12 +38,14 @@ export default function TimerButton({ label, onClick, isLoading }: ITimerButtonP
           label={label}
           onClick={handleButtonClick}
           size="small"
+          style={{ width: '80px', marginRight: '10px' }} 
+          // disabled={disable}
         />
       </Box>
     );
   } else {
     return (
-      <Box>
+      <Box style={{width: '80px'}}>
         <Tag label={`${timer}`} type="black" timer />
       </Box>
     );

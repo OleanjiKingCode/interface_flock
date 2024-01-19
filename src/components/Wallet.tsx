@@ -1,44 +1,59 @@
 import { Box, Button, DropButton, Heading, Layer, Text } from 'grommet';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import truncateEthAddress from 'truncate-eth-address';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { WalletContext } from '../context/walletContext';
 import { useIsMounted } from '../hooks';
 import { MaticIcon } from './Icons/MaticIcon';
 import { Down } from 'grommet-icons';
+import { useConnectWallet } from '../hooks/useConnectWallet';
+import useEventListener from '../hooks/useEventListener';
+import { NOTIFICATION_TYPE_REWARD_UPDATED } from '../constants/notificationTypes';
 
 export function Wallet() {
-  const { address } = useAccount();
   const [showWalletSettings, setShowWalletSettings] = useState(false);
-  const { connectAsync, connectors } = useConnect();
-  const { disconnect: wagmiDisconnect } = useDisconnect();
-  const { nativeTokenBalance, FLCTokenBalance, FLOTokenBalance } =
-    useContext(WalletContext);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [localWindow,setWindow]=useState<Window>()
+  const [userPoints, setUserPoints] = useState(0);
+  const { handleConnect, handleDisconnect } = useConnectWallet();
 
+  const { nativeTokenBalance, FLCTokenBalance } =
+    useContext(WalletContext);
   const mounted = useIsMounted();
 
-  const handleConnect = async () => {
-    await connectAsync({
-      connector: connectors[0],
-    });
-  };
+  const { address } = useAccount();
 
-  const handleDisconnect = async () => {
-    wagmiDisconnect();
+  const getPoints=async ()=>{
+    try{
+      const response=await fetch(`${window.location.origin}/api/rag/getMyPoints?wallet=${address?.toLowerCase()}`)
+      const result=await response.json()
+      setUserPoints(result.totalRewardAmount)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleEvent = (data: any) => {
+    getPoints().then()
   };
+  useEventListener(NOTIFICATION_TYPE_REWARD_UPDATED, handleEvent, localWindow);
 
   const roundedFLCBalance = FLCTokenBalance
     ? Math.round(Number(FLCTokenBalance.formatted) * 100) / 100
     : 0;
 
-  const roundedFLOBalance = FLOTokenBalance
-    ? Math.round(Number(FLOTokenBalance.formatted) * 100) / 100
-    : 0;
-
   const roundedMaticBalance = nativeTokenBalance
     ? Math.round(Number(nativeTokenBalance.formatted) * 10000) / 10000
     : 0;
+
+  useEffect(() => {
+    if (address) {
+      getPoints()
+    }
+    if(window){
+      setWindow(window)
+    }
+  }, [address]);
 
   if (!mounted) {
     return <></>;
@@ -46,13 +61,14 @@ export function Wallet() {
 
   return (
     <>
-      <Box direction="row" gap="large">
+      <Box direction="row" gap="medium">
         {address && (
           <Box
             round="large"
             background="rgba(108,148,236,1)"
             pad="xsmall"
             border={{ color: 'black', size: 'small' }}
+            justify='center'
           >
             <Button
               secondary
@@ -71,7 +87,13 @@ export function Wallet() {
             border={{ color: 'black', size: 'small' }}
           >
             <Box direction="row" gap="small">
-              <DropButton
+              <Button 
+                secondary
+                color="white"
+                pad="xsmall"
+                label={`${userPoints} POINTS`}
+              />
+              {/* <DropButton
                 secondary
                 reverse
                 icon={<Down />}
@@ -99,7 +121,7 @@ export function Wallet() {
                   margin: { top: 'xsmall' },
                   round: 'small',
                 }}
-              />
+              /> */}
               <Button
                 secondary
                 color="white"
@@ -123,7 +145,7 @@ export function Wallet() {
           <Button
             primary
             label="Connect Wallet"
-            pad="xsmall"
+            pad={{vertical: 'xsmall', horizontal: '18px'}}
             onClick={handleConnect}
           />
         )}

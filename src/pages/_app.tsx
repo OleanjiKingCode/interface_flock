@@ -6,13 +6,14 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { Grommet } from 'grommet';
 import './global.css';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
-import { Web3Auth } from '@web3auth/modal';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { WalletContextProvider } from '../context/walletContext';
 import { web3AuthInstance } from '../hooks/web3AuthInstance';
 import { css } from 'styled-components';
+import { ReCaptchaProvider } from 'next-recaptcha-v3';
+import { NotificationProvider } from '../context/notificationContext';
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -87,7 +88,7 @@ const flockTheme = {
       disabled: '#879095',
       error: '#B8482B',
       success: '#54875D',
-      ghost: '#F2F6FF'
+      ghost: '#F2F6FF',
     },
   },
   button: {
@@ -145,13 +146,18 @@ const flockTheme = {
   formField: { label: { requiredIndicator: true } },
 };
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
+
   return (
     <Grommet theme={flockTheme} cssVars>
       <WagmiConfig config={configWagmi}>
-        <WalletContextProvider>
-          <GoogleAnalytics trackPageViews />
-          <Component {...pageProps} />
-        </WalletContextProvider>
+        <NotificationProvider>
+          <ReCaptchaProvider useEnterprise>
+            <WalletContextProvider>
+              <GoogleAnalytics trackPageViews />
+              <Component {...pageProps} />
+            </WalletContextProvider>
+          </ReCaptchaProvider>
+          </NotificationProvider>
       </WagmiConfig>
     </Grommet>
   );

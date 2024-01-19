@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-const client = new PrismaClient();
 import { ethers } from 'ethers';
 import { CLAIM_REWARDS_ABI } from '@/src/contracts/claimRewards';
+import prisma from '@/src/lib/prisma';
+import {insertReward, RewardType} from "@/src/repositories/rewards";
 
 type Response = {};
 
@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   const { walletAddress } = req.body;
 
-  const getUser = await client.user.findUnique({
+  const getUser = await prisma.user.findUnique({
     where: {
       wallet: walletAddress as string,
     },
@@ -25,7 +25,7 @@ export default async function handler(
     return res.status(404).json({ data: { message: 'Not Found' } });
   }
 
-  const getQuestTask = await client.questTask.findUnique({
+  const getQuestTask = await prisma.questTask.findUnique({
     where: {
       taskName: 'claim_reward',
     },
@@ -50,7 +50,7 @@ export default async function handler(
     'twitter_connect',
   ];
 
-  const questTasks = await client.questTask.findMany({
+  const questTasks = await prisma.questTask.findMany({
     where: {
       taskName: { in: questTaskNames },
     },
@@ -99,7 +99,7 @@ export default async function handler(
     }
   }
 
-  const createTask = await client.userQuestTask.create({
+  const createTask = await prisma.userQuestTask.create({
     data: {
       userId: getUser.id,
       taskId: getQuestTask.id,

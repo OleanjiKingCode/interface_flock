@@ -1,5 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '@/src/lib/prisma';
+import { RewardType, insertReward } from '@/src/repositories/rewards';
 import { PrismaClient } from '@prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Response = {
   data: {
@@ -8,8 +10,8 @@ type Response = {
   };
 };
 
-const getUser = async (prismaDB: PrismaClient, wallet: string) => {
-  return await prismaDB.user.findUnique({
+const getUser = async (prisma: PrismaClient, wallet: string) => {
+  return await prisma.user.findUnique({
     where: {
       wallet,
     },
@@ -45,16 +47,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const prismaDB = new PrismaClient();
-  await prismaDB.$connect();
+  await prisma.$connect();
 
   try {
-    let user = await getUser(prismaDB, req.body.wallet);
+    let user = await getUser(prisma, req.body.wallet);
     console.log(user);
     if (user) {
+      await insertReward(user.id, RewardType.WalletConnect);
       if (
         !user?.userQuestTask.find(
-          (task) => task.questTask.taskName === 'claim_reward'
+          (task: any) => task.questTask.taskName === 'claim_reward'
         )
       ) {
         const discordExpiresAt = new Date(
@@ -70,27 +72,28 @@ export default async function handler(
           twitterExpiresAt.getTime() < Date.now() ||
           discordExpiresAt.getTime() < Date.now()
         ) {
-          await prismaDB.userQuestTask.deleteMany({
+          await prisma.userQuestTask.deleteMany({
             where: {
               userId: user.id,
             },
           });
-          user = await getUser(prismaDB, req.body.wallet);
+          user = await getUser(prisma, req.body.wallet);
         }
       }
 
       return res.status(200).json({ data: { message: 'OK', user } });
     }
 
-    const createUser = await prismaDB.user.create({
+    const createUser = await prisma.user.create({
       data: {
         wallet: req.body.wallet,
       },
       select: {
         wallet: true,
+        id: true,
       },
     });
-    console.log(createUser);
+    await insertReward(createUser.id, RewardType.WalletConnect);
     return res.status(200).json({ data: { message: 'OK', user: createUser } });
   } catch (error) {
     console.log(error);
