@@ -1,40 +1,43 @@
-import { Box, Button, DropButton, Heading, Layer, Text } from 'grommet';
-import { useContext, useEffect, useState } from 'react';
-import truncateEthAddress from 'truncate-eth-address';
-import { useAccount } from 'wagmi';
-import { WalletContext } from '../context/walletContext';
-import { useIsMounted } from '../hooks';
-import { MaticIcon } from './Icons/MaticIcon';
-import { Down } from 'grommet-icons';
-import { useConnectWallet } from '../hooks/useConnectWallet';
-import useEventListener from '../hooks/useEventListener';
-import { NOTIFICATION_TYPE_REWARD_UPDATED } from '../constants/notificationTypes';
+import { Box, Button, DropButton, Heading, Layer, Text } from "grommet";
+import { useContext, useEffect, useState } from "react";
+import truncateEthAddress from "truncate-eth-address";
+import { useAccount } from "wagmi";
+import { WalletContext } from "../context/walletContext";
+import { useIsMounted } from "../hooks";
+import { MaticIcon } from "./Icons/MaticIcon";
+import { Down } from "grommet-icons";
+import { useConnectWallet } from "../hooks/useConnectWallet";
+import useEventListener from "../hooks/useEventListener";
+import { NOTIFICATION_TYPE_REWARD_UPDATED } from "../constants/notificationTypes";
 
 export function Wallet() {
   const [showWalletSettings, setShowWalletSettings] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const [localWindow,setWindow]=useState<Window>()
+  const [localWindow, setWindow] = useState<Window>();
   const [userPoints, setUserPoints] = useState(0);
   const { handleConnect, handleDisconnect } = useConnectWallet();
 
-  const { nativeTokenBalance, FLCTokenBalance } =
-    useContext(WalletContext);
+  const { nativeTokenBalance, FLCTokenBalance } = useContext(WalletContext);
   const mounted = useIsMounted();
 
   const { address } = useAccount();
 
-  const getPoints=async ()=>{
-    try{
-      const response=await fetch(`${window.location.origin}/api/rag/getMyPoints?wallet=${address?.toLowerCase()}`)
-      const result=await response.json()
-      setUserPoints(result.totalRewardAmount)
+  const getPoints = async () => {
+    try {
+      const response = await fetch(
+        `${
+          window.location.origin
+        }/api/rag/getMyPoints?wallet=${address?.toLowerCase()}`
+      );
+      const result = await response.json();
+      setUserPoints(result.totalRewardAmount);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
   const handleEvent = (data: any) => {
-    getPoints().then()
+    getPoints().then();
   };
   useEventListener(NOTIFICATION_TYPE_REWARD_UPDATED, handleEvent, localWindow);
 
@@ -48,10 +51,10 @@ export function Wallet() {
 
   useEffect(() => {
     if (address) {
-      getPoints()
+      getPoints();
     }
-    if(window){
-      setWindow(window)
+    if (window) {
+      setWindow(window);
     }
   }, [address]);
 
@@ -63,37 +66,35 @@ export function Wallet() {
     <>
       <Box direction="row" gap="medium">
         {address && (
-          <Box
-            round="large"
-            background="rgba(108,148,236,1)"
-            pad="xsmall"
-            border={{ color: 'black', size: 'small' }}
-            justify='center'
-          >
-            <Button
-              secondary
-              size="small"
-              icon={<MaticIcon />}
-              label="Mumbai"
-              color="white"
-            ></Button>
-          </Box>
+          <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
+            <div className="text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
+              <MaticIcon />
+              <p className=" max-[930px]:hidden  flex min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">
+                Mumbai
+              </p>
+            </div>
+          </div>
         )}
         {address ? (
-          <Box
-            round="large"
-            background="rgba(108,148,236,1)"
-            pad="xsmall"
-            border={{ color: 'black', size: 'small' }}
-          >
-            <Box direction="row" gap="small">
-              <Button 
-                secondary
-                color="white"
-                pad="xsmall"
-                label={`${userPoints} POINTS`}
-              />
-              {/* <DropButton
+          <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2 py-1 border-black border-[2px]">
+            <div className="text-black font-medium bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
+              <p className=" max-[930px]:text-[8px] min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">{`${userPoints} POINTS`}</p>
+            </div>
+
+            <div
+              onClick={
+                address
+                  ? () => setShowWalletSettings(true)
+                  : () => handleConnect()
+              }
+              className="flex flex-row gap-2 justify-center items-center text-black font-medium bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer"
+            >
+              <p className="max-[930px]:text-[8px] min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">
+                {truncateEthAddress(address)}
+              </p>
+              <Down />
+            </div>
+            {/* <DropButton
                 secondary
                 reverse
                 icon={<Down />}
@@ -122,30 +123,20 @@ export function Wallet() {
                   round: 'small',
                 }}
               /> */}
-              <Button
+            {/* <Button
                 secondary
                 color="white"
                 label={truncateEthAddress(address)}
                 pad="xsmall"
                 reverse
                 icon={<Down />}
-                onClick={
-                  address
-                    ? () => {
-                        setShowWalletSettings(true);
-                      }
-                    : () => {
-                        handleConnect();
-                      }
-                }
-              />
-            </Box>
-          </Box>
+              /> */}
+          </div>
         ) : (
           <Button
             primary
             label="Connect Wallet"
-            pad={{vertical: 'xsmall', horizontal: '18px'}}
+            pad={{ vertical: "xsmall", horizontal: "18px" }}
             onClick={handleConnect}
           />
         )}

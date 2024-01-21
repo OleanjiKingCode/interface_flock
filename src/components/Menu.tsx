@@ -1,26 +1,28 @@
-import { Box, Button, type ButtonProps } from 'grommet';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { Box, type ButtonProps } from "grommet";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 interface MenuItemProps {
   selected: boolean;
   text: string;
+  onClick: () => void;
 }
-const MenuItem = ({
-  selected,
-  text,
-  ...rest
-}: MenuItemProps & ButtonProps & { onClick?: () => void }) => (
-  <Button
-    {...rest}
-    style={selected ? { backgroundColor: '#6C94EC', borderRadius: '20px', padding: '6px 16px 6px 16px', border: '2px solid black' } : {}}
+
+const MenuItem: React.FC<MenuItemProps> = ({ selected, text, onClick }) => (
+  <div
+    onClick={onClick}
+    className={`${
+      selected
+        ? "bg-blue-500 rounded-full px-4 py-1 border-2 border-black text-white"
+        : ""
+    } hover:bg-blue-500 hove hover:border-black hover:text-white text-black hover:px-4 hover:py-1 hover:cursor-pointer hover:rounded-full`}
   >
-    <p className={`text-${selected ? "white" : "black"}`}>{text}</p>
-  </Button>
+    <p>{text}</p>
+  </div>
 );
 
 export const Menu = () => {
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
   const [selected, setSelected] = useState(pathname);
 
   useEffect(() => {
@@ -47,17 +49,19 @@ export const Menu = () => {
           text="Faucet"
         /> */}
         <MenuItem
-          href="/cocreation"
-          onClick={() => setSelected('/cocreation')}
-          hoverIndicator={false}
-          selected={selected === '/cocreation'}
+          onClick={() => {
+            setSelected("/cocreation");
+            push("/cocreation");
+          }}
+          selected={selected === "/cocreation"}
           text="Co-create"
         />
         <MenuItem
-          href="/points"
-          onClick={() => setSelected('/points')}
-          hoverIndicator={false}
-          selected={selected === '/points'}
+          onClick={() => {
+            setSelected("/points");
+            push("/points");
+          }}
+          selected={selected === "/points"}
           text="Points"
         />
         {/* <MenuItem
