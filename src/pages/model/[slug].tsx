@@ -2,7 +2,7 @@ import { Layout, PrimaryButton } from '@/src/components';
 import { Contribution } from '@/src/components/RAG/Contribution';
 import { ModelDescription } from '@/src/components/RAG/ModelDescription';
 import { PreviewAndVote } from '@/src/components/RAG/PreviewAndVote';
-import { Box, Layer} from 'grommet';
+import { Box, Button, Layer} from 'grommet';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FLockBoard } from '@/src/components/RAG/FLockBoard';
@@ -29,9 +29,17 @@ function ChatTab({ model }: { model: any}) {
             round="medium"
             alignSelf="center"
           >
-            <Box alignSelf="end" onClick={() => setIsChatOpen(false)}>
-              <Close />
-            </Box>
+            <Button
+              icon={<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.5 22.6191C18.023 22.6191 22.5 18.1421 22.5 12.6191C22.5 7.09614 18.023 2.61914 12.5 2.61914C6.977 2.61914 2.5 7.09614 2.5 12.6191C2.5 18.1421 6.977 22.6191 12.5 22.6191Z" stroke="#879095" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.05798 9.34961L15.942 16.2336" stroke="#879095" stroke-width="2" stroke-linecap="round"/>
+              <path d="M15.942 9.34961L9.05797 16.2336" stroke="#879095" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              }
+              onClick={() => setIsChatOpen(false)}
+              alignSelf="end"
+              plain
+            />
             <PlainMultiChatPanel model={model} />
           </Box>
         </Layer>
