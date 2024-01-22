@@ -91,7 +91,7 @@ export function Wallet() {
                 secondary
                 color="white"
                 pad="xsmall"
-                label={`${userPoints} POINTS`}
+                label={`${userPoints || 0} POINTS`}
               />
               {/* <DropButton
                 secondary

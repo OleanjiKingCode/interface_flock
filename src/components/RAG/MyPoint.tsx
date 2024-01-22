@@ -47,7 +47,7 @@ const MyPoint = () => {
       </svg>
         <span className={'text-base font-medium'}>My total points</span></div>
       <div className={'flex flex-row items-center space-x-2'}>
-        <div className={'text-4xl font-bold'}>{points}</div>
+        <div className={'text-4xl font-bold'}>{points||0}</div>
       </div>
       <div className={'flex flex-row items-center text-sm pt-4'}>Check your points history here<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M16.67 13.0605L13.09 16.6505L14.5 18.0605L20.5 12.0605L14.5 6.06055L13.09 7.47055L16.67 11.0605L4.5 11.0605L4.5 13.0605L16.67 13.0605Z" fill="#879095"/>

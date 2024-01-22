@@ -74,6 +74,10 @@ export const getRewardLimitMap=()=>{
       limit:30,
       time: -1
     },
+    [RewardType.ClaimReward]:{
+      limit:30,
+      time: -1
+    },
   }
 }
 export const getRewardMap=()=>{
