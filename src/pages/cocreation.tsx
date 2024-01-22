@@ -279,14 +279,7 @@ export default function CoCreationPage() {
                       <Text size="16px" weight="bold">{trimText(model?.modelName!, 35)}</Text>
                       <Text size="14px" color="grey" wordBreak="break-all">{trimText(model?.description!, 185)}</Text>
                     </Box>
-
-                    <Avatar>
-                      <Box width="small" height="small">
-                        <Image
-                          src={model.modelIcon! ? model.modelIcon : 'emoji1.png'}
-                        />
-                      </Box>
-                    </Avatar>
+                    <Avatar src={model.modelIcon! ? model.modelIcon : 'emoji1.png'} />
                   </Box>
                 );
               })
