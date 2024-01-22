@@ -7,6 +7,7 @@ interface ITimerButtonProps {
   onClick(): void;
   isLoading: boolean;
   disable?: boolean;
+  className?: string;
 }
 
 export default function TimerButton({ label, onClick, isLoading, disable }: ITimerButtonProps) {
@@ -38,7 +39,7 @@ export default function TimerButton({ label, onClick, isLoading, disable }: ITim
           label={label}
           onClick={handleButtonClick}
           size="small"
-          style={{ width: '80px', marginRight: '10px' }} 
+          style={{ width: '80px'}} 
           // disabled={disable}
         />
       </Box>
