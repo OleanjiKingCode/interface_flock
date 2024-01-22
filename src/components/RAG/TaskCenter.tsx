@@ -402,7 +402,7 @@ const TaskCenter = ({}:TaskCenterProps) => {
       <html>
         <head><title>Telegram Login</title></head>
         <body>
-          <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="FLock_Points_Test_Bot" data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+          <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login=${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME} data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
           <script type="text/javascript">
             function onTelegramAuth(user) {
               const telegramUserData = {
