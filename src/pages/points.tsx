@@ -19,7 +19,7 @@ export default function PointsPage() {
                             <div>
                                 <div className="space-y-3 text-black">
                                     <h1 className="text-4xl font-semibold">Earn points and gain rewards</h1>
-                                    <p className="text-lg font-normal w-4/5">The platform where the machine learning community collaborates on models, datasets, and applications.</p>
+                                    <p className="text-lg font-normal w-4/5">Earn as you innovate: Co-create and Contribute to collect points and unlock exclusive rewards</p>
                                 </div>
                                 <div className='flex flex-row space-x-10 py-10'>
                                 <Button
