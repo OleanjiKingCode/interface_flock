@@ -13,27 +13,31 @@ export default function PointsPage() {
         <ReCaptchaPageView />
         <QuestContextProvider>
             <Layout>
-                <Box pad="large" justify="center" gap="medium" width="85%" alignSelf="center">
-                    <div className={'flex flex-col md:flex-row justify-between'}>
-                        <div>
-                            <div className="space-y-3 text-black">
-                                <h1 className="text-4xl font-semibold">Earn points and gain rewards</h1>
-                                <p className="text-lg font-normal w-4/5">The platform where the machine learning community collaborates on models, datasets, and applications.</p>
+                <Box justify="center" gap="medium" fill="horizontal" alignSelf="center" background="white">
+                    <div className="bg-white w-full py-12 flex justify-center">
+                        <div className={'w-5/6 flex flex-col md:flex-row justify-between'}>
+                            <div>
+                                <div className="space-y-3 text-black">
+                                    <h1 className="text-4xl font-semibold">Earn points and gain rewards</h1>
+                                    <p className="text-lg font-normal w-4/5">The platform where the machine learning community collaborates on models, datasets, and applications.</p>
+                                </div>
+                                <div className='flex flex-row space-x-10 py-10'>
+                                <Button
+                                    primary
+                                    label="Earn Points"
+                                    pad={{ horizontal: 'large', vertical: 'small' }}
+                                    href='/cocreation'
+                                />
+                                </div>
                             </div>
-                            <div className='flex flex-row space-x-10 py-10'>
-                            <Button
-                                primary
-                                label="Earn Points"
-                                pad={{ horizontal: 'large', vertical: 'small' }}
-                                href='/cocreation'
-                            />
+                            <div className={'mr-12'}>
+                                <MyPoint/>
                             </div>
-                        </div>
-                        <div className={'mr-12'}>
-                            <MyPoint/>
                         </div>
                     </div>
-                    <div className="pl-1" style={{ marginBottom: '20px' }}>
+                </Box>
+                <Box justify="center" gap="medium" width="83.3%" alignSelf="center">
+                    <div className="pl-1 pt-12" style={{ marginBottom: '20px' }}>
                         <div>
                             <h3 className="text-2xl font-extrabold text-black">Task Center</h3>
                             <TaskCenter />
