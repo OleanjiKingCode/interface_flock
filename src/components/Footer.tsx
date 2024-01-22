@@ -24,23 +24,28 @@ const CustomForm = () => {
     <MailchimpSubscribe
       url="https://flock.us21.list-manage.com/subscribe/post?u=cf2df2da902eb8d1a5a6a553f&id=5b5347bc6d&f_id=00d6e7e1f0"
       render={({ subscribe }) => (
-        <Box direction="row" gap="small" width="medium" align="center">
-          <TextInput
-            value={email}
-            placeholder="Your Email Address"
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ borderRadius: '30px', border: "1px solid black", fontSize: '16px', padding: '10px 20px' }}
-            width="313px"
-          />
-          <Button
-            primary
-            pad={{ horizontal: 'medium', vertical: 'small' }}
-            label="Subscribe"
-            onClick={() => {
-              subscribe({ EMAIL: email });
-              setEmail('');
-            }}
-          />
+        <Box direction="row-responsive" align="center" gap="small">
+          <Box width='300px'>
+            <TextInput
+              value={email}
+              placeholder="Your Email Address"
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ borderRadius: '30px', border: "1px solid black", fontSize: '16px', padding: '10px 20px'}}
+            />            
+          </Box>
+          <Box width="200px">
+            <Button
+              primary
+              pad={{ horizontal: 'medium', vertical: 'small' }}
+              label="Subscribe"
+              onClick={() => {
+                subscribe({ EMAIL: email });
+                setEmail('');
+              }}
+              fill
+            />              
+          </Box>
+          
         </Box>
       )}
     />

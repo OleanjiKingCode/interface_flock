@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Image, Layer, Spinner } from 'grommet';
+import { Box, Heading, Text, Image, Layer, Spinner, Button } from 'grommet';
 import { PrimaryButton } from '../PrimaryButton';
 import { SecondaryButton } from '../SecondaryButton';
 import { Close, FormNext, LinkNext, LinkPrevious } from 'grommet-icons';
@@ -112,9 +112,17 @@ export const VotingModal = ({
                 margin={{ top: 'medium' }}
             >
                 <Box>
-                  <Box alignSelf="end" onClick={() => setIsShowPreview(false)}>
-                      <Close />
-                  </Box>
+                  <Button
+                    icon={<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 22.6191C18.023 22.6191 22.5 18.1421 22.5 12.6191C22.5 7.09614 18.023 2.61914 12.5 2.61914C6.977 2.61914 2.5 7.09614 2.5 12.6191C2.5 18.1421 6.977 22.6191 12.5 22.6191Z" stroke="#879095" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.05798 9.34961L15.942 16.2336" stroke="#879095" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M15.942 9.34961L9.05797 16.2336" stroke="#879095" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    }
+                    onClick={() => setIsShowPreview(false)}
+                    alignSelf="end"
+                    plain
+                  />
                   <Box>
                       <Heading level="3" margin="none">Knowledge #{currentPreview+1}</Heading>
                       <Text>{isFilePathLink(contributions[currentPreview]?.filePath)?'Link':'File name'} : {shortenFilename(toReadablePath(contributions[currentPreview]?.filePath))}</Text>
