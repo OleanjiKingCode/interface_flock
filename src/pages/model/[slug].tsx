@@ -89,8 +89,8 @@ export default function RAGTasksPage() {
       <Box width="100%" gap="large" justify="center" align="center">
         <Box
           justify="start"
-          width="85%"
-          pad={{ vertical: 'large', horizontal: 'large' }}
+          width="83.3%"
+          pad={{ vertical: 'large' }}
           gap="medium"
         >
           <Box gap="large" width="100%">
