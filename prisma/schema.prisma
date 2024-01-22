@@ -171,6 +171,8 @@ model DataContribution {
   Model                 Model                  @relation(fields: [modelId], references: [id])
   User                  User?                  @relation(fields: [userId], references: [id])
   UserModelRewardAudits UserModelRewardAudit[]
+
+  @@id([id])
 }
 
 model Model {
