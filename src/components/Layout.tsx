@@ -169,7 +169,7 @@ export const Layout = ({ children }: Props) => {
             </Box>
           </div>
           {size !== "small" && <Menu />}
-          {size !== "small" && <Wallet />}
+          {size !== "small" && <Wallet isSmall={false} />}
         </div>
       </Header>
       {showSidebar && (

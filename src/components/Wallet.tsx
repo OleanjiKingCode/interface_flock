@@ -10,7 +10,11 @@ import { useConnectWallet } from "../hooks/useConnectWallet";
 import useEventListener from "../hooks/useEventListener";
 import { NOTIFICATION_TYPE_REWARD_UPDATED } from "../constants/notificationTypes";
 
-export function Wallet() {
+interface IWalletProps {
+  isSmall: boolean;
+}
+
+export function Wallet({ isSmall }: IWalletProps) {
   const [showWalletSettings, setShowWalletSettings] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const [localWindow, setWindow] = useState<Window>();
@@ -66,12 +70,23 @@ export function Wallet() {
     <>
       <div className="flex flex-row gap-7 items-center justify-center ">
         {address && (
-          <div className=" max-[882px]:hidden rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
-            <div className="  text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
-              <MaticIcon />
-              <p className=" max-[1011px]:hidden flex text-base">Mumbai</p>
-            </div>
-          </div>
+          <>
+            {isSmall ? (
+              <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
+                <div className="text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
+                  <MaticIcon />
+                  <p className="max-[425px]:hidden text-base">Mumbai</p>
+                </div>
+              </div>
+            ) : (
+              <div className=" max-[882px]:hidden rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
+                <div className="text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
+                  <MaticIcon />
+                  <p className=" max-[1011px]:hidden flex text-base">Mumbai</p>
+                </div>
+              </div>
+            )}
+          </>
         )}
         {address ? (
           <div className="rounded-3xl bg-[rgba(108,148,236,1)] w-full flex flex-row gap-3 items-center justify-center px-2 py-1 border-black border-[2px]">

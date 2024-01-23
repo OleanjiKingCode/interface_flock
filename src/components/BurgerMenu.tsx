@@ -57,7 +57,7 @@ export const BurgerMenu = ({
         </div>
       </div>
       <Box align="center" gap="large" margin={{ top: "xlarge" }}>
-        <Wallet />
+        <Wallet isSmall={true} />
         <MenuItem
           href="/cocreation"
           onClick={() => setSelected("/cocreation")}
