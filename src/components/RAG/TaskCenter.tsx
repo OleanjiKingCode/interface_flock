@@ -671,70 +671,40 @@ const TaskCenter = ({}: TaskCenterProps) => {
     <div className="flex flex-col space-y-2">
       <ToasterList toasts={toasts} />
       {!!notCompletedTasks.length && (
-      <>
-        <div className="font-medium text-sm text-center md:text-left">Complete the tasks to earn the points</div>
-        {notCompletedTasks.map(({ title, key }, index) => {
-          const rewardPoints = rewardsPoints[key];
-          const taskIndex = REWARD_TITLE_MAP.findIndex(task => task.key === key);
-          const taskNumber = taskIndex !== -1 ? taskIndex + 1 : '';
-          const shouldShowButton = key === firstUncompletedTaskKey || key === 'ModelContribution';
+        <>
+          <div className="font-medium text-sm text-center md:text-left">
+            Complete the tasks to earn the points
+          </div>
+          {notCompletedTasks.map(({ title, key }, index) => {
+            const rewardPoints = rewardsPoints[key];
+            const taskIndex = REWARD_TITLE_MAP.findIndex(
+              (task) => task.key === key
+            );
+            const taskNumber = taskIndex !== -1 ? taskIndex + 1 : "";
+            const shouldShowButton =
+              key === firstUncompletedTaskKey || key === "ModelContribution";
 
-          return (
-            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between font-medium text-black shadow bg-white px-8 py-3 rounded-full text-center md:text-left" key={key}>
-              {key !== 'ModelContribution' && (
-                <Box
-                  align="center"
-                  justify="center"
-                  border={{ color: 'black', size: 'small' }}
-                  round="50px"
-                  background="white"
-                  width="25px"
-                  height="25px"
-                  className="mr-4" 
-                  style={{ minWidth: '25px', minHeight: '25px'}}
-                >
-                  <span className="text-s">{taskNumber}</span>
-                </Box>
-              )}
-              <div className='flex flex-1 items-center justify-center md:justify-start'>{title}</div>
-              <div>
-                {shouldShowButton && (
-                  <>
-                    {key === 'DiscordJoinGetRole' || key === 'TwitterFollow' || key === 'TwitterShare' || key === 'TelegramJoin' ? (
-                      <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
-                        <span className="block text-center md:text-left pr-2">{rewardPoints?.limit} Points</span>
-                        <PrimaryButton
-                          size="small"
-                          label="Join Now"
-                          onClick={() => handleButtonClick(key)}
-                        />
-                        <TimerButton
-                          label="Verify"
-                          onClick={() => handleVerifyButtonClick(key)}
-                          isLoading={handleLoading(key)}
-                        />
-                      </div>
-                    ) :
-                    key === 'ModelContribution' ? (
-                      <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
-                        <span className="block text-center md:text-left pr-2">Earn up to {rewardPoints?.limit} Points</span>
-                        <PrimaryButton size="small" label="To earn" onClick={() => handleButtonClick(key)} style={{ width: '180px' }}/>
-                      </div>
-                    ) :
-                    (
-                      <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
-                        <span className="block text-center md:text-left pr-2">{rewardPoints?.limit} Points</span>
-                        <PrimaryButton size="small" label="Connect Now" onClick={() => handleButtonClick(key)} busy={handleLoading(key)} style={{ width: '180px' }} />
-                      </div>
-                    )}
-                  </>
-
+            return (
+              <div
+                className="flex flex-col md:flex-row items-center justify-center md:justify-between font-medium text-black shadow bg-white px-8 py-3 rounded-full text-center md:text-left"
+                key={key}
+              >
+                {key !== "ModelContribution" && (
+                  <Box
+                    align="center"
+                    justify="center"
+                    border={{ color: "black", size: "small" }}
+                    round="50px"
+                    background="white"
+                    width="25px"
+                    height="25px"
+                    className="mr-4"
+                    style={{ minWidth: "25px", minHeight: "25px" }}
+                  >
+                    <span className="text-s">{taskNumber}</span>
+                  </Box>
                 )}
-                <div
-                  className={`flex-1 text-left ${
-                    key !== "ModelContribution" ? "md:ml-6" : ""
-                  }`}
-                >
+                <div className="flex flex-1 items-center justify-center md:justify-start">
                   {title}
                 </div>
                 <div>
@@ -744,15 +714,14 @@ const TaskCenter = ({}: TaskCenterProps) => {
                       key === "TwitterFollow" ||
                       key === "TwitterShare" ||
                       key === "TelegramJoin" ? (
-                        <div className="flex items-center space-x-2">
-                          <span className="pr-2">
+                        <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
+                          <span className="block text-center md:text-left pr-2">
                             {rewardPoints?.limit} Points
                           </span>
                           <PrimaryButton
                             size="small"
                             label="Join Now"
                             onClick={() => handleButtonClick(key)}
-                            style={{ width: "80px" }}
                           />
                           <TimerButton
                             label="Verify"
@@ -761,8 +730,8 @@ const TaskCenter = ({}: TaskCenterProps) => {
                           />
                         </div>
                       ) : key === "ModelContribution" ? (
-                        <>
-                          <span className="pr-2">
+                        <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
+                          <span className="block text-center md:text-left pr-2">
                             Earn up to {rewardPoints?.limit} Points
                           </span>
                           <PrimaryButton
@@ -771,23 +740,82 @@ const TaskCenter = ({}: TaskCenterProps) => {
                             onClick={() => handleButtonClick(key)}
                             style={{ width: "180px" }}
                           />
-                        </>
+                        </div>
                       ) : (
-                        <>
-                          <span className="pr-2">
+                        <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
+                          <span className="block text-center md:text-left pr-2">
                             {rewardPoints?.limit} Points
                           </span>
                           <PrimaryButton
                             size="small"
                             label="Connect Now"
                             onClick={() => handleButtonClick(key)}
-                            style={{ width: "180px" }}
                             busy={handleLoading(key)}
+                            style={{ width: "180px" }}
                           />
-                        </>
+                        </div>
                       )}
                     </>
                   )}
+                  <div
+                    className={`flex-1 text-left ${
+                      key !== "ModelContribution" ? "md:ml-6" : ""
+                    }`}
+                  >
+                    {title}
+                  </div>
+                  <div>
+                    {shouldShowButton && (
+                      <>
+                        {key === "DiscordJoinGetRole" ||
+                        key === "TwitterFollow" ||
+                        key === "TwitterShare" ||
+                        key === "TelegramJoin" ? (
+                          <div className="flex items-center space-x-2">
+                            <span className="pr-2">
+                              {rewardPoints?.limit} Points
+                            </span>
+                            <PrimaryButton
+                              size="small"
+                              label="Join Now"
+                              onClick={() => handleButtonClick(key)}
+                              style={{ width: "80px" }}
+                            />
+                            <TimerButton
+                              label="Verify"
+                              onClick={() => handleVerifyButtonClick(key)}
+                              isLoading={handleLoading(key)}
+                            />
+                          </div>
+                        ) : key === "ModelContribution" ? (
+                          <>
+                            <span className="pr-2">
+                              Earn up to {rewardPoints?.limit} Points
+                            </span>
+                            <PrimaryButton
+                              size="small"
+                              label="To earn"
+                              onClick={() => handleButtonClick(key)}
+                              style={{ width: "180px" }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <span className="pr-2">
+                              {rewardPoints?.limit} Points
+                            </span>
+                            <PrimaryButton
+                              size="small"
+                              label="Connect Now"
+                              onClick={() => handleButtonClick(key)}
+                              style={{ width: "180px" }}
+                              busy={handleLoading(key)}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -796,13 +824,16 @@ const TaskCenter = ({}: TaskCenterProps) => {
       )}
       {!!completedTasks.length && (
         <>
-
-          <div className="font-medium text-sm text-center md:text-left">Completed</div>
+          <div className="font-medium text-sm text-center md:text-left">
+            Completed
+          </div>
           {completedTasks.map(({ title, key }) => {
             const rewardPoints = rewardsPoints[key];
             return (
-              <div className="flex flex-col md:flex-row items-center justify-center md:justify-between font-medium text-black shadow bg-white px-8 py-3 rounded-full text-center md:text-left" key={key}>
-
+              <div
+                className="flex flex-col md:flex-row items-center justify-center md:justify-between font-medium text-black shadow bg-white px-8 py-3 rounded-full text-center md:text-left"
+                key={key}
+              >
                 <Box
                   align="center"
                   justify="center"
@@ -817,11 +848,16 @@ const TaskCenter = ({}: TaskCenterProps) => {
                 </Box>
                 <div className="flex-1 md:ml-6">{title}</div>
                 <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 items-center justify-center md:justify-end space-x-0 md:space-x-2">
-                  <div className="text-center md:text-right w-full md:w-auto px-2 md:px-0">+{rewardPoints?.limit} Points</div>
-                  <div style={{ width: '180px' }}>
-                    {key === 'TwitterConnect' && twitterName && (
-                      <PrimaryButton size="small" label={twitterName} style={{ width: '180px' }} />
-
+                  <div className="text-center md:text-right w-full md:w-auto px-2 md:px-0">
+                    +{rewardPoints?.limit} Points
+                  </div>
+                  <div style={{ width: "180px" }}>
+                    {key === "TwitterConnect" && twitterName && (
+                      <PrimaryButton
+                        size="small"
+                        label={twitterName}
+                        style={{ width: "180px" }}
+                      />
                     )}
                     {key === "DiscordConnect" && discordName && (
                       <PrimaryButton

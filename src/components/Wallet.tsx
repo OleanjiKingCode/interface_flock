@@ -1,4 +1,4 @@
-import { Box, Button, DropButton, Heading, Layer, Text } from "grommet";
+import { Box, Button, Heading, Layer, Text } from "grommet";
 import { useContext, useEffect, useState } from "react";
 import truncateEthAddress from "truncate-eth-address";
 import { useAccount } from "wagmi";
@@ -64,22 +64,19 @@ export function Wallet() {
 
   return (
     <>
-      <Box direction="row" gap="medium">
+      <div className="flex flex-row gap-7 items-center justify-center ">
         {address && (
-          <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
-            <div className="text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
+          <div className=" max-[882px]:hidden rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2  py-1 border-black border-[2px] cursor-pointer">
+            <div className="  text-black font-medium flex gap-2 items-center justify-center bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
               <MaticIcon />
-              <p className=" max-[930px]:hidden  flex min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">
-                Mumbai
-              </p>
+              <p className=" max-[1011px]:hidden flex text-base">Mumbai</p>
             </div>
           </div>
         )}
         {address ? (
-
-          <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2 py-1 border-black border-[2px]">
+          <div className="rounded-3xl bg-[rgba(108,148,236,1)] w-full flex flex-row gap-3 items-center justify-center px-2 py-1 border-black border-[2px]">
             <div className="text-black font-medium bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
-              <p className=" max-[930px]:text-[8px] min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">{`${userPoints} POINTS`}</p>
+              <p className="max-[935px]:text-[12px]  max-[935px]:font-bold text-base">{`${userPoints} POINTS`}</p>
             </div>
 
             <div
@@ -90,63 +87,11 @@ export function Wallet() {
               }
               className="flex flex-row gap-2 justify-center items-center text-black font-medium bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer"
             >
-              <p className="max-[930px]:text-[8px] min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">
+              <p className="max-[935px]:text-[12px]  max-[935px]:font-bold text-base">
                 {truncateEthAddress(address)}
               </p>
-              <Down />
+              <Down size="small" style={{ fontWeight: "bold" }} />
             </div>
-            {/* <DropButton
-
-          <Box
-            round="large"
-            background="rgba(108,148,236,1)"
-            pad="xsmall"
-            border={{ color: 'black', size: 'small' }}
-          >
-            <Box direction="row" gap="small">
-              <Button 
-                secondary
-                color="white"
-                pad="xsmall"
-                label={`${userPoints || 0} POINTS`}
-              />
-              {/* <DropButton
-                secondary
-                reverse
-                icon={<Down />}
-                color="white"
-                label={`${roundedMaticBalance} MATIC`}
-                pad="xsmall"
-                open={isWalletOpen}
-                dropAlign={{ top: 'bottom' }}
-                dropContent={
-                  <Box background="white" pad="small" gap="small">
-                    <Box
-                      round="small"
-                      background="#E0E4E7"
-                      color="black"
-                      pad="xsmall"
-                    >
-                      <Text weight="bold">{roundedFLCBalance} FLC</Text>
-                    </Box>
-                  </Box>
-                }
-                onClick={() => setIsWalletOpen(true)}
-                dropProps={{
-                  background: { color: 'white' },
-                  onClickOutside: () => setIsWalletOpen(false),
-                  margin: { top: 'xsmall' },
-                  round: 'small',
-                }}
-              /> */}
-            {/* <Button
-                secondary
-                color="white"
-                label={truncateEthAddress(address)}
-                pad="xsmall"
-                reverse
-                icon={<Down />}
-              /> */}
           </div>
         ) : (
           <Button
@@ -156,7 +101,7 @@ export function Wallet() {
             onClick={handleConnect}
           />
         )}
-      </Box>
+      </div>
       {showWalletSettings && (
         <Layer onEsc={() => setShowWalletSettings(false)}>
           <Box align="center" justify="center" pad="large" gap="medium">
