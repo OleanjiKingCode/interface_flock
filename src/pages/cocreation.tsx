@@ -54,7 +54,7 @@ const FooterCards = () => {
   return (
     <div className="w-5/6 grid grid-cols-1 lg:grid-cols-3 grid-rows-24 lg:grid-rows-10 gap-6 h-fit">
       <div className="row-span-10 bg-gradient-to-t from-[#6C93EC] rounded-2xl p-10 space-y-10 border-2 border-[#f7fafb] hover:border-[#6C93EC]">
-        <a href="https://docs.flock.io/rag/ai-co-creation-platform/guidelines#model-customisation" target="_blank" className="h-full flex flex-col justify-between">
+        <a href="https://docs.flock.io/ai-co-creation-platform/guidelines#model-customisation" target="_blank" className="h-full flex flex-col justify-between">
           <div className="space-y-2 w-3/5">
             <h3 className="text-2xl leading-6 font-semibold w-4/5">Model Customization</h3> 
             <p className="text-sm leading-4 font-medium">Utilize RAG to develop a domain-specific chatbot, tailored to specific applications</p>
@@ -66,7 +66,7 @@ const FooterCards = () => {
         </a>
       </div>
       <div className="row-span-4 bg-gradient-to-r from-[#6C93EC] rounded-2xl p-4 border-2 border-[#f7fafb] hover:border-[#6C93EC]">
-        <a href="https://docs.flock.io/rag/ai-co-creation-platform/guidelines#knowledge-contribution" target="_blank" className="flex flex-row space-x-4 items-center h-full">
+        <a href="https://docs.flock.io/ai-co-creation-platform/guidelines#knowledge-contribution" target="_blank" className="flex flex-row space-x-4 items-center h-full">
           <img src="/static/images/cocreation/Group-2.svg" alt="icon" className="lg:w-2/5 w-1/4"/>
           <div className="my-4 space-y-1">
             <h3 className="text-2xl leading-6 font-semibold">Knowledge Contribution</h3> 
@@ -76,7 +76,7 @@ const FooterCards = () => {
         </a>
       </div>
       <div className="row-span-4 bg-gradient-to-r from-[#6C93EC] rounded-2xl p-4 flex flex-row space-x-4 border-2 border-[#f7fafb] hover:border-[#6C93EC]">
-        <a href="https://docs.flock.io/rag/ai-co-creation-platform/guidelines#model-evaluation" target="_blank" className="flex flex-row space-x-4 items-center h-full">
+        <a href="https://docs.flock.io/ai-co-creation-platform/guidelines#model-evaluation" target="_blank" className="flex flex-row space-x-4 items-center h-full">
           <img src="/static/images/cocreation/Group-3.svg" alt="icon" className="lg:w-2/5 w-1/4"/>
           <div className="my-4 space-y-1">
             <h3 className="text-2xl leading-6 font-semibold">Model Evaluation</h3> 
@@ -86,7 +86,7 @@ const FooterCards = () => {
         </a>
       </div>
       <div className="row-span-6 lg:col-span-2 bg-gradient-to-l from-[#6C93EC] rounded-2xl lg:flex lg:flex-row justify-between p-10 lg:px-16 border-2 border-[#f7fafb] hover:border-[#6C93EC]">
-        <a href="https://docs.flock.io/rag/ai-co-creation-platform/guidelines#quality-assurance" target="_blank" className="lg:flex lg:flex-row justify-between">
+        <a href="https://docs.flock.io/ai-co-creation-platform/guidelines#quality-assurance" target="_blank" className="lg:flex lg:flex-row justify-between">
           <div className="space-y-2 self-center">
             <h3 className="text-2xl leading-6 font-semibold w-1/3">Quality Assurance</h3> 
             <p className="text-sm leading-4 font-medium w-2/3">Evaluate and refine the knowledge base to ensure its alignment with specific use cases.</p>
@@ -194,7 +194,7 @@ export default function CoCreationPage() {
                   color="white"
                   label="Hub guide"
                   pad={{ horizontal: 'large', vertical: 'small' }}
-                  href='https://docs.flock.io/rag/ai-co-creation-platform/guidelines'
+                  href='https://docs.flock.io/ai-co-creation-platform/guidelines'
                   target='_blank'
                 />
                 <Button
@@ -279,14 +279,7 @@ export default function CoCreationPage() {
                       <Text size="16px" weight="bold">{trimText(model?.modelName!, 35)}</Text>
                       <Text size="14px" color="grey" wordBreak="break-all">{trimText(model?.description!, 185)}</Text>
                     </Box>
-
-                    <Avatar>
-                      <Box width="small" height="small">
-                        <Image
-                          src={model.modelIcon! ? model.modelIcon : 'emoji1.png'}
-                        />
-                      </Box>
-                    </Avatar>
+                    <Avatar src={model.modelIcon! ? model.modelIcon : 'emoji1.png'} />
                   </Box>
                 );
               })

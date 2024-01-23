@@ -22,6 +22,7 @@ const CustomForm = () => {
     <MailchimpSubscribe
       url="https://flock.us21.list-manage.com/subscribe/post?u=cf2df2da902eb8d1a5a6a553f&id=5b5347bc6d&f_id=00d6e7e1f0"
       render={({ subscribe }) => (
+
         <div className="flex flex-row w-full min-[1011px]:w-[50%] gap-5 items-center justify-center">
           <TextInput
             value={email}
@@ -46,6 +47,7 @@ const CustomForm = () => {
             className="w-[50%]"
           />
         </div>
+
       )}
     />
   );

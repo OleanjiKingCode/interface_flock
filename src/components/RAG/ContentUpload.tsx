@@ -125,23 +125,40 @@ export const ContentUpload = ({ files, setFiles, onFilesChange }: ContentUploadP
       <Box
         round="small"
         border={{ size: 'small', style: 'dashed' }}
-        pad="small"
         gap="small"
         background="#FFFFFF"
         width="100%"
       >
-        <Heading level="5">Your Knowledge</Heading>
+        <Heading level="5" margin={{top: "small", left: "small"}}>Your Knowledge</Heading>
         <Box fill>
           <ThemeContext.Extend
             value={{
-              tab: {
+              tabs: {
                 gap: 'medium',
-            },
+              },
+              tab: {
+                border: {
+                  side: 'bottom',
+                  size: 'small',
+                  color: 'white',
+                  active: {
+                    color: '#6C93EC',
+                  },
+                  hover: {
+                    color: 'white',
+                  },
+                },
+                color: 'black',
+                margin: {
+                  left: 'medium',
+                  bottom: 'none'
+                },
+              },
             }}
           >
             <Tabs alignControls="start">
-              <Tab title="Upload">
-                <Box>
+              <Tab title="Upload" style={{fontWeight: 600}}>
+                <Box style={{borderTop: '3px solid #F8FAFB'}} pad="small">
                   <div className="w-full items-center justify-center py-10">
                     <label htmlFor="file-drop" className="font-semibold text-sm text-center">
                       <h2 className="text-lg">Drag & Drop</h2>
@@ -159,8 +176,8 @@ export const ContentUpload = ({ files, setFiles, onFilesChange }: ContentUploadP
                   </div>
                 </Box>
               </Tab>
-              <Tab title="Input">
-                <Box gap="small" pad={{top: "small"}}>
+              <Tab title="Input" style={{fontWeight: 600}}>
+                <Box gap="small" style={{borderTop: '3px solid #F8FAFB'}} pad={{horizontal: "small", bottom: "small", top: "medium"}}>
                   <Box fill>
                     <TextArea
                       fill
@@ -180,8 +197,8 @@ export const ContentUpload = ({ files, setFiles, onFilesChange }: ContentUploadP
                   </Box>
                 </Box>
               </Tab>
-              <Tab title="Links">
-                <Box gap="small" pad={{top: "small"}}>
+              <Tab title="Links" style={{fontWeight: 600}}>
+                <Box gap="small" style={{borderTop: '3px solid #F8FAFB'}} pad={{horizontal: "small", bottom: "small", top: "medium"}}>
                   <Box fill>
                     <TextInput
                       name="link"

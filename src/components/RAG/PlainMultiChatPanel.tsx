@@ -134,7 +134,7 @@ const PlainMultiChatPanel = ({model}:PlainMultiChatPanelProps) => {
     }
   }
   return <div className="flex flex-col flex-grow w-full rounded-lg mr-16 overflow-visible">
-    <p className="text-xl font-semibold pb-6 pl-4 -mt-8">Chat</p>
+    <p className="text-xl font-semibold pb-6 pl-4 -mt-8 w-fit">Chat</p>
     <div className="flex flex-col space-y-4 flex-grow h-0 p-4 overflow-auto -mt-6" ref={panelRef}>
       <div className="flex w-full mt-2 space-x-3 items-start">
         <img className={'rounded-full h-8 w-8 border border-zinc-700'} src={model.modelIcon!} alt={''} />

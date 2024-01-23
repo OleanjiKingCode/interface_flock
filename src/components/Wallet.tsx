@@ -76,6 +76,7 @@ export function Wallet() {
           </div>
         )}
         {address ? (
+
           <div className="rounded-3xl bg-[rgba(108,148,236,1)] flex flex-row gap-3 items-center justify-center px-2 py-1 border-black border-[2px]">
             <div className="text-black font-medium bg-white px-2 py-1 rounded-full border-black border-[2px] cursor-pointer">
               <p className=" max-[930px]:text-[8px] min-[950px]:text-[10px] md:text-[14px] lg:text-lg xl:text-xl">{`${userPoints} POINTS`}</p>
@@ -95,6 +96,21 @@ export function Wallet() {
               <Down />
             </div>
             {/* <DropButton
+
+          <Box
+            round="large"
+            background="rgba(108,148,236,1)"
+            pad="xsmall"
+            border={{ color: 'black', size: 'small' }}
+          >
+            <Box direction="row" gap="small">
+              <Button 
+                secondary
+                color="white"
+                pad="xsmall"
+                label={`${userPoints || 0} POINTS`}
+              />
+              {/* <DropButton
                 secondary
                 reverse
                 icon={<Down />}
